@@ -3,6 +3,7 @@
 
 :root {
     --background-dark: #1f2330;
+    --main-dark: #4a4a4a;
 }
 
 .bg-dark {
@@ -26,7 +27,8 @@ p {
     align-items: center;
     border: 2px solid #5f6982;
     border-radius: 10px;
-    padding: 20px;
+    padding: calc(2rem + 50px) calc(4rem + 100px);
+    background-color: #dbdbdb;
 }
 
 .uploader label i.fa {
@@ -48,4 +50,8 @@ p {
 
 .uploader input[type=file] {
     display: none;
+}
+
+.uploading {
+    background-color: rgba(10, 10, 10, .1);
 }

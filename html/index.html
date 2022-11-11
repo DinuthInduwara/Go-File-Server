@@ -1,47 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="hero is-primary">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="./bulma.css">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/">
 
 </head>
 
-<body class="hero" id="body">
+<body id="body">
 
     <nav id="nav" class="navbar hero">
         <div class="navbar-menu">
             <a class="navbar-item" href="#">Home</a>
-            <a class="navbar-item" href="#">Upload</a>
             <a class="navbar-item" href="#">Files</a>
-            <a class="navbar-item navbar-end" role="button" onclick="changemode()">Chmode</a>
+            <a class="navbar-item" href="#">System</a>
+            <!-- <a class="navbar-item navbar-end" role="button" onclick="changemode()">Chmode</a> -->
         </div>
     </nav>
 
-    <div id="content" class="hero mt-3 ">
+    <div id="contentss" class="hero mt-3 ">
 
 
-
-
-
-
-
-        <p class="lead">No Plugins <b>Just Javascript</b></p>
 
         <div class="container p-3">
-            <form action="" class="mt-5 uploader" method="get">
-                <input type="file" name="files" id="files" multiple>
+
+
+            <form action="/sd">
+                <div class="field">
+                    <p class="control has-icons-left">
+                        <input required class="input" type="url" placeholder="Download URL">
+                        <span class="icon is-small is-left">
+                            <i class="fa fa-link"></i>
+                        </span>
+                    </p>
+                </div>
+                <button class="button is-link">Upload</button>
+            </form>
+
+
+
+            <form id="upload_form" enctype="multipart/form-data" method="post" class="mt-5 uploader">
+                <input required type="file" name="files" id="files" onchange="onupload()">
                 <label for="files">
                     <i class="fa fa-download" aria-hidden="true"></i>
                     <div>Select a file or drag here</div>
                 </label>
+                <button class="hidden" type="submit"> Upload</button>
             </form>
-            <button type="submit"> Upload</button>
+
+
+
+            <div id="downloads">
+
+
+
+            </div>
+
+
+
         </div>
+
+
+
+
+    </div>
+
+
 
 
 
@@ -52,24 +80,31 @@
 <script>
 
 
+    function onupload() {
 
+        let xtml = `<div class="card mt-6 mb-6 has-text-centered uploading">
+                    <div class="card-header-title">${_("files").files[0].name}</div>
 
+                    <div class="card-content"><progress class="progress is-link " id="progressBar"
+                        value="10" max="100"></progress></div>
+                        <br>
+                    <div id="loaded_n_total"></div>
 
+                    </div>`
+        $("#downloads").html(xtml)
 
+        var file = _("files").files[0];
+        var startTime = new Date().getTime();
+        var formdata = new FormData();
+        formdata.append("file", file);
+        var ajax = new XMLHttpRequest();
+        ajax.upload.addEventListener("progress", progressHandler, false);
+        ajax.addEventListener("load", completeHandler, false);
+        ajax.addEventListener("error", errorHandler, false);
+        ajax.addEventListener("abort", abortHandler, false);
+        ajax.open("POST", "/api/upload");
+        ajax.send(formdata);
 
-
-    function changemode() {
-        if ($("#nav").hasClass("is-dark")) {
-            // in dark mode
-            $("#nav").removeClass("is-dark");
-            $("#body").removeClass("is-dark");
-
-
-        } else {
-            // in light mode
-            $("#body").addClass("is-dark");
-            $("#nav").addClass("is-dark");
-        }
     }
 
 
@@ -78,7 +113,36 @@
 
 
 
+    function _(el) {
+        return document.getElementById(el);
+    }
 
+    function humanFileSize(size) {
+        var i = Math.floor(Math.log(size) / Math.log(1024));
+        return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+    };
+
+
+
+    function progressHandler(event) {
+        _("loaded_n_total").innerHTML = "Uploaded " + humanFileSize(event.loaded) + " of " + humanFileSize(event.total);
+        var percent = (event.loaded / event.total) * 100;
+        _("progressBar").value = Math.round(percent);
+    }
+
+    function completeHandler(event) {
+        var data = JSON.parse(event.target.responseText);
+        var longLink = "<a href='" + data.longLink + "'>" + data.longLink + "</a>";
+        _("loaded_n_total") = "<h2>Your file uploaded!</h2><p>File name: " + data.fileName + "<br>Download Links:<br>" + shortLink + " (short link)<br> " + longLink + "(long link)</p>";
+    }
+
+    function errorHandler(event) {
+        _("status").innerHTML = "Upload Failed";
+    }
+
+    function abortHandler(event) {
+        _("status").innerHTML = "Upload Aborted";
+    }
 
 </script>
 

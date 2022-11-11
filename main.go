@@ -18,6 +18,8 @@ func main() {
 	e.POST("/api/upload", modules.HandleUpload)
 	e.GET("/dl/name/:name", modules.DownloadFile)
 	e.GET("/files", modules.GetFiles)
+	e.Static("/static", "assets")
+
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", port)))
 }
