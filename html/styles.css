@@ -1,3 +1,51 @@
-:root{
-    --background: #1f2330;
+@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css);
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+
+:root {
+    --background-dark: #1f2330;
+}
+
+.bg-dark {
+    background-color: var(--background-dark);
+}
+
+
+
+
+
+p {
+    font-family: "Roboto", sans-serif;
+    font-size: 18px;
+    color: #5f6982;
+}
+
+
+.uploader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid #5f6982;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.uploader label i.fa {
+    font-size: 50px;
+    margin-bottom: 1rem;
+    transition: all 0.2s ease-in-out;
+
+}
+
+.uploader label {
+    clear: both;
+    text-align: center;
+
+}
+
+.uploader:hover {
+    border: solid 4px #454cad;
+}
+
+.uploader input[type=file] {
+    display: none;
 }

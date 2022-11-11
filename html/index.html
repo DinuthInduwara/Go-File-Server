@@ -11,9 +11,9 @@
 
 </head>
 
-<body id="body" class="hero">
+<body class="hero" id="body">
 
-    <nav  id="nav" class="navbar">
+    <nav id="nav" class="navbar hero">
         <div class="navbar-menu">
             <a class="navbar-item" href="#">Home</a>
             <a class="navbar-item" href="#">Upload</a>
@@ -22,16 +22,64 @@
         </div>
     </nav>
 
+    <div id="content" class="hero mt-3 ">
+
+
+
+
+
+
+
+        <p class="lead">No Plugins <b>Just Javascript</b></p>
+
+        <div class="container p-3">
+            <form action="" class="mt-5 uploader" method="get">
+                <input type="file" name="files" id="files" multiple>
+                <label for="files">
+                    <i class="fa fa-download" aria-hidden="true"></i>
+                    <div>Select a file or drag here</div>
+                </label>
+            </form>
+            <button type="submit"> Upload</button>
+        </div>
+
 
 
 </body>
 
 <script src="./jquery-3.5.1.min.js"></script>
+<!-- <script src="./myscr.js"></script> -->
 <script>
-    function changemode(){
-        $("#nav").hasClass()
+
+
+
+
+
+
+
+
+    function changemode() {
+        if ($("#nav").hasClass("is-dark")) {
+            // in dark mode
+            $("#nav").removeClass("is-dark");
+            $("#body").removeClass("is-dark");
+
+
+        } else {
+            // in light mode
+            $("#body").addClass("is-dark");
+            $("#nav").addClass("is-dark");
+        }
     }
+
+
+
+
+
+
+
+
+
 </script>
-<script src="./myscr.js"></script>
->
+
 </html>
