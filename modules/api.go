@@ -36,9 +36,9 @@ func HandleUpload(c echo.Context) error {
 		return err
 	}
 
-	urlPath := "http://" + c.Request().Host + "/dl"
+	// urlPath := "http://" + c.Request().Host + "/dl"
 
-	longLink := urlPath + "/name/" + file.Filename
+	longLink := "/dl/name/" + file.Filename
 
 	return c.JSON(http.StatusOK, map[string]string{"fileName": file.Filename, "longLink": longLink})
 }
