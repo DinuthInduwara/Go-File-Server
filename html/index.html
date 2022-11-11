@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="">
-    <link rel="stylesheet" href="../assets/">
+    <link rel="stylesheet" href="/assets/bulma.css">
+    <link rel="stylesheet" href="/assets/styles.css">
 
 </head>
 
@@ -32,7 +32,7 @@
             <form action="/sd">
                 <div class="field">
                     <p class="control has-icons-left">
-                        <input required class="input" type="url" placeholder="Download URL">
+                        <input required class="input is-link" type="url" placeholder="Download URL">
                         <span class="icon is-small is-left">
                             <i class="fa fa-link"></i>
                         </span>
@@ -72,10 +72,9 @@
 
 
 
-
 </body>
 
-<script src="./jquery-3.5.1.min.js"></script>
+<script src="/assets/jquery-3.5.1.min.js"></script>
 <!-- <script src="./myscr.js"></script> -->
 <script>
 
@@ -125,15 +124,14 @@
 
 
     function progressHandler(event) {
-        _("loaded_n_total").innerHTML = "Uploaded " + humanFileSize(event.loaded) + " of " + humanFileSize(event.total);
+        _("loaded_n_total").innerHTML = "Uploaded " + humanFileSize(event.loaded) + " of " + humanFileSize(event.total) + `   ${Math.round(percent)}%`;
         var percent = (event.loaded / event.total) * 100;
         _("progressBar").value = Math.round(percent);
     }
 
     function completeHandler(event) {
         var data = JSON.parse(event.target.responseText);
-        var longLink = "<a href='" + data.longLink + "'>" + data.longLink + "</a>";
-        _("loaded_n_total") = "<h2>Your file uploaded!</h2><p>File name: " + data.fileName + "<br>Download Links:<br>" + shortLink + " (short link)<br> " + longLink + "(long link)</p>";
+        $("#loaded_n_total").html("<h2>Your file uploaded!</h2><p>" + "<br>Download Links:<br>" + ` <div class="field pt-4"><p class="control has-icons-left"><input readonly class="input is-danger is-focused" type="url" value="${data.longLink}" placeholder="Download URL"><span class="icon is-small is-left"><a class="is-clickable is-focused" role="button" ><i class="fa fa-link is-focused"></i></a></span></p></div>`);
     }
 
     function errorHandler(event) {
