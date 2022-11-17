@@ -1,52 +1,51 @@
 package modules
 
 import (
-	"io"
+	"fmt"
 	"mime"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/labstack/echo/v4"
 )
 
+
+type metadata struct{
+	fname string
+	contentLength int64
+	done int64
+	
+
+}
+
 func DownloadFileHandler(c echo.Context) error {
-	var url string = c.Param("url")
-	downloadHandler("/public", url)
-	return nil
+
 }
 
-func downloadHandler(path string, url string) error {
-	resp, err := http.Get(url)
-	contentType := resp.Header.Get("Content-type")
-	arr := strings.Split(url, "/")
+func GetNameFromURL(url string) string {
+	ls := strings.Split(url, "/")
+	return ls[len(ls)-1]
+}
 
-	ext, err := mime.ExtensionsByType(contentType)
-
-	out, err := os.Create(path + "/" + arr[len(arr)-1] + ext[0])
-	defer out.Close()
-
-	defer resp.Body.Close()
-	io.Copy(out, resp.Body)
-
+func GetNameFromHeder(url string) (string, http.Header, error) {
+	request, err := http.NewRequest("HEAD", url, nil)
 	if err != nil {
-		panic(err)
+		return "", nil, err
 	}
-	return nil
+	response, err := http.DefaultClient.Do(request)
+	defer response.Body.Close()
+	if err != nil {
+		return "", response.Header, err
+	}
 
-}
+	cd := response.Header.Get("Content-Disposition")
+	if cd == "" {
+		return "", response.Header, fmt.Errorf("Failed To GET FROM Header")
+	}
+	_, params, err := mime.ParseMediaType(cd)
+	if err != nil {
+		return "", response.Header, err
+	}
 
-func download(destinationPath, downloadUrl string) error {
-	tempDestinationPath := destinationPath + ".tmp"
-	req, _ := http.NewRequest("GET", downloadUrl, nil)
-	resp, _ := http.DefaultClient.Do(req)
-	defer resp.Body.Close()
-
-	f, _ := os.OpenFile(tempDestinationPath, os.O_CREATE|os.O_WRONLY, 0644)
-
-
-	io.Copy(io.MultiWriter(f, bar), resp.Body)
-	os.Rename(tempDestinationPath, destinationPath)
-	return nil
-
+	return params["filename"], response.Header, nil
 }
